@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# whatever-frontend
 
-## Getting Started
+Landing page and customer website (Next.js 16). Talks to `whatever-backend`.
 
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
+npm install
+npm run dev        # http://localhost:3001
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The API must be running at `NEXT_PUBLIC_API_URL` with `http://localhost:3001` in its `CORS_ORIGINS`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## What's here
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route | Page |
+| --- | --- |
+| `/` | Landing page |
+| `/login`, `/register` | Email + password, and Google when `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is set |
+| `/verify-email`, `/forgot-password`, `/reset-password` | Links from emails |
+| `/account` | Profile, change password, logged-in devices (protected) |
 
-## Learn More
+## Auth
 
-To learn more about Next.js, take a look at the following resources:
+`src/lib/api.ts` keeps the access token in memory only. The refresh token is an httpOnly cookie (`wf_rt`) set by the API, so JavaScript never sees it. On a `TOKEN_EXPIRED` response the client refreshes once (single-flight) and retries. On page load, `AuthProvider` calls `/auth/refresh` to restore the session.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`src/lib/api.ts`, `auth.tsx`, `errors.ts` and `components/ui.tsx` are shared with `whatever-vendor` and `whatever-admin` by copy. Keep them in sync until types are generated from the API's OpenAPI spec (`/docs-json`).
