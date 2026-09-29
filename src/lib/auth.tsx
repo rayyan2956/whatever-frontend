@@ -9,14 +9,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import {
-  api,
-  refreshSession,
-  setAccessToken,
-  setSessionEndedHandler,
-  type AuthSession,
-  type User,
-} from "./api";
+import type { AuthSession, User } from "@/api/types";
+import { api, refreshSession, setAccessToken, setSessionEndedHandler } from "./api";
 
 type AuthState =
   | { status: "loading"; user: null }

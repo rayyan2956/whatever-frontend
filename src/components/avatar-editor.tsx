@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState, type ChangeEvent } from "react";
-import { api, type User } from "@/lib/api";
+import type { User } from "@/api/types";
+import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { toFormError } from "@/lib/errors";
 import { checkImage, IMAGE_TYPES, uploadFile } from "@/lib/upload";

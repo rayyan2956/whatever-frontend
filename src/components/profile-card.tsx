@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { api, type User } from "@/lib/api";
+import type { User } from "@/api/types";
+import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { toFormError, type FormError } from "@/lib/errors";
 import { AvatarEditor } from "./avatar-editor";

@@ -1,26 +1,9 @@
+import type { UploadPurpose, UploadUrl } from "@/api/types";
 import { api, ApiError } from "./api";
 
 // Direct-to-storage uploads: the API only hands out a presigned URL, the file
 // goes straight from the browser to storage, and the returned key is then sent
 // to the endpoint that uses it (e.g. PATCH /me with avatarKey).
-
-export type UploadPurpose =
-  | "AVATAR"
-  | "VENDOR_LOGO"
-  | "VENDOR_CNIC"
-  | "LISTING_IMAGE"
-  | "PAYMENT_SLIP"
-  | "REVIEW_IMAGE"
-  | "CHAT_IMAGE";
-
-interface UploadUrl {
-  uploadId: string;
-  key: string;
-  uploadUrl: string;
-  method: "PUT";
-  headers: Record<string, string>;
-  expiresIn: number;
-}
 
 export const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;

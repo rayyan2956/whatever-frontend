@@ -1,30 +1,12 @@
 // API client with in-memory access token and single-flight refresh (PRD §11.2).
 // The refresh token lives in an httpOnly cookie set by the API; this code never sees it.
+// Request and response types are generated from the API spec (see src/api/types.ts).
+
+import * as Sentry from "@sentry/nextjs";
+import type { AuthSession } from "@/api/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api/v1";
 const CLIENT_APP = "frontend";
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: "CUSTOMER" | "VENDOR" | "SUPER_ADMIN";
-  status: "ACTIVE" | "BLOCKED";
-  phone: string | null;
-  city: string | null;
-  avatarUrl: string | null;
-  // Masked by the API (*****-*******-3); null until the user adds it.
-  cnic: string | null;
-  emailVerified: boolean;
-  hasPassword: boolean;
-  createdAt: string;
-}
-
-export interface AuthSession {
-  accessToken: string;
-  accessTokenExpiresIn: number;
-  user: User;
-}
 
 export class ApiError extends Error {
   constructor(
@@ -64,13 +46,21 @@ async function parse<T>(res: Response): Promise<T> {
   const body = await res.json().catch(() => null);
   if (!res.ok) {
     const error = body?.error;
-    throw new ApiError(
+    const apiError = new ApiError(
       res.status,
       error?.code ?? "UNKNOWN",
       error?.message ?? "Something went wrong. Please try again.",
       error?.details,
       error?.requestId,
     );
+    // Server faults only; 4xx are expected. The requestId links this report to
+    // the API's own Sentry event and logs.
+    if (res.status >= 500) {
+      Sentry.captureException(apiError, {
+        tags: { requestId: apiError.requestId, apiCode: apiError.code },
+      });
+    }
+    throw apiError;
   }
   return body as T;
 }

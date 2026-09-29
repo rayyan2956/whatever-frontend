@@ -1,21 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import type { Session } from "@/api/types";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { toFormError } from "@/lib/errors";
 import { describeDevice, formatDateTime } from "@/lib/format";
 import { Alert, Button, Card, Spinner } from "./ui";
-
-interface Session {
-  id: string;
-  clientApp: string;
-  deviceName: string | null;
-  ip: string | null;
-  userAgent: string | null;
-  lastUsedAt: string;
-  current: boolean;
-}
 
 // "Logged-in devices" (PRD §11.2): see active sessions and sign any of them out.
 export function SessionsCard() {

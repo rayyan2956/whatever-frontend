@@ -26,3 +26,22 @@ The API must be running at `NEXT_PUBLIC_API_URL` with `http://localhost:3001` in
 `src/lib/api.ts` keeps the access token in memory only. The refresh token is an httpOnly cookie (`wf_rt`) set by the API, so JavaScript never sees it. On a `TOKEN_EXPIRED` response the client refreshes once (single-flight) and retries. On page load, `AuthProvider` calls `/auth/refresh` to restore the session.
 
 `src/lib/api.ts`, `auth.tsx`, `errors.ts` and `components/ui.tsx` are shared with `whatever-vendor` and `whatever-admin` by copy. Keep them in sync until types are generated from the API's OpenAPI spec (`/docs-json`).
+
+## API types
+
+Request and response types are generated from the backend's OpenAPI spec; never write them by hand.
+
+```bash
+npm run api:generate                                   # reads ../whatever-backend/openapi.json
+API_SPEC=http://localhost:3000/docs-json npm run api:generate   # or from a running API
+```
+
+The output (`src/api/generated/schema.ts`) is committed. Import short names from `src/api/types.ts` (add an alias there when you need a new schema). Run this after pulling backend changes that touch the API.
+
+## Error reporting
+
+Sentry is off unless `NEXT_PUBLIC_SENTRY_DSN` is set (see `.env.example`). `src/instrumentation-client.ts` and `src/instrumentation.ts` start it; API responses with a 5xx status are reported with the API's `requestId` as a tag. Source maps upload during `npm run build` only when `SENTRY_AUTH_TOKEN`, `SENTRY_ORG` and `SENTRY_PROJECT` are set.
+
+## CI
+
+`.github/workflows/ci.yml` runs lint, typecheck and build on every pull request and push to `main`.

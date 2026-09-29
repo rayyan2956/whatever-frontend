@@ -2,7 +2,8 @@
 
 import { GoogleLogin } from "@react-oauth/google";
 import { useState, type FormEvent } from "react";
-import { api, type User } from "@/lib/api";
+import type { User } from "@/api/types";
+import { api } from "@/lib/api";
 import { toFormError, type FormError } from "@/lib/errors";
 import { GOOGLE_CLIENT_ID } from "./google-button";
 import { Alert, Button, Card, Field } from "./ui";
