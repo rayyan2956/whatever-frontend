@@ -37,11 +37,3 @@ API_SPEC=http://localhost:3000/docs-json npm run api:generate   # or from a runn
 ```
 
 The output (`src/api/generated/schema.ts`) is committed. Import short names from `src/api/types.ts` (add an alias there when you need a new schema). Run this after pulling backend changes that touch the API.
-
-## Error reporting
-
-Sentry is off unless `NEXT_PUBLIC_SENTRY_DSN` is set (see `.env.example`). `src/instrumentation-client.ts` and `src/instrumentation.ts` start it; API responses with a 5xx status are reported with the API's `requestId` as a tag. Source maps upload during `npm run build` only when `SENTRY_AUTH_TOKEN`, `SENTRY_ORG` and `SENTRY_PROJECT` are set.
-
-## CI
-
-`.github/workflows/ci.yml` runs lint, typecheck and build on every pull request and push to `main`.
