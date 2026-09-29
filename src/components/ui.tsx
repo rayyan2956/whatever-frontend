@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 const cn = (...classes: (string | false | null | undefined)[]) =>
@@ -59,7 +60,7 @@ export function Field({
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
         className={cn(
-          "block h-10 w-full rounded-lg border bg-white px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-2 focus:outline-offset-0",
+          "block h-10 w-full rounded-lg border bg-white px-3 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-2 focus:outline-offset-0 disabled:cursor-not-allowed disabled:bg-stone-50 disabled:text-stone-500",
           error
             ? "border-red-400 focus:outline-red-500"
             : "border-stone-300 focus:border-brand-600 focus:outline-brand-600/30",
@@ -121,5 +122,46 @@ export function FullPageSpinner() {
       <Spinner className="size-6" />
       <span className="sr-only">Loading</span>
     </div>
+  );
+}
+
+// Profile photo, or initials when there is none. Served as-is (unoptimized):
+// avatars come from the storage CDN or Google and are already small.
+export function Avatar({
+  name,
+  src,
+  className,
+}: {
+  name: string;
+  src: string | null;
+  className?: string;
+}) {
+  const initials = name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+  return (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-100 font-semibold text-brand-800",
+        className,
+      )}
+    >
+      {src ? (
+        <Image
+          src={src}
+          alt=""
+          width={96}
+          height={96}
+          unoptimized
+          referrerPolicy="no-referrer"
+          className="size-full object-cover"
+        />
+      ) : (
+        <span aria-hidden="true">{initials}</span>
+      )}
+    </span>
   );
 }

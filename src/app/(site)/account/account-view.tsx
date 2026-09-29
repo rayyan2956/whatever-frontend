@@ -2,8 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { ChangePasswordCard } from "@/components/change-password-card";
+import { DeleteAccountCard } from "@/components/delete-account-card";
+import { ProfileCard } from "@/components/profile-card";
 import { SessionsCard } from "@/components/sessions-card";
-import { Button, Card } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 
 export function AccountView() {
@@ -29,25 +31,10 @@ export function AccountView() {
         </Button>
       </div>
 
-      <Card>
-        <dl className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <dt className="text-sm text-stone-500">Name</dt>
-            <dd className="mt-1 font-medium text-stone-900">{user.name}</dd>
-          </div>
-          <div>
-            <dt className="text-sm text-stone-500">Email</dt>
-            <dd className="mt-1 font-medium text-stone-900">{user.email}</dd>
-          </div>
-          <div>
-            <dt className="text-sm text-stone-500">Phone</dt>
-            <dd className="mt-1 font-medium text-stone-900">{user.phone ?? "Not added"}</dd>
-          </div>
-        </dl>
-      </Card>
-
+      <ProfileCard user={user} />
       {user.hasPassword && <ChangePasswordCard />}
       <SessionsCard />
+      <DeleteAccountCard user={user} />
     </main>
   );
 }

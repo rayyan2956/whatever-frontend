@@ -13,6 +13,8 @@ export interface User {
   phone: string | null;
   city: string | null;
   avatarUrl: string | null;
+  // Masked by the API (*****-*******-3); null until the user adds it.
+  cnic: string | null;
   emailVerified: boolean;
   hasPassword: boolean;
   createdAt: string;

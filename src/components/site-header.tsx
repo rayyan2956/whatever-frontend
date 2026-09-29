@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import { BRAND_NAME, VENDOR_APP_URL } from "@/lib/brand";
+import { Avatar } from "./ui";
 
 export function SiteHeader() {
   const { status, user } = useAuth();
@@ -18,7 +19,11 @@ export function SiteHeader() {
             List your tours
           </a>
           {user ? (
-            <Link href="/account" className="rounded-lg px-3 py-2 font-medium text-stone-900 hover:bg-sand-100">
+            <Link
+              href="/account"
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 font-medium text-stone-900 hover:bg-sand-100"
+            >
+              <Avatar name={user.name} src={user.avatarUrl} className="size-7 text-xs" />
               {user.name.split(" ")[0]}
             </Link>
           ) : status === "anonymous" ? (

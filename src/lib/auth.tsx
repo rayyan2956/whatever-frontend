@@ -31,6 +31,8 @@ interface AuthContextValue {
   logout: () => Promise<void>;
   logoutAll: () => Promise<void>;
   reloadUser: () => Promise<void>;
+  // After the profile is saved, so every screen shows the new values.
+  setUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -99,6 +101,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState({ status: "authenticated", user });
   }, []);
 
+  const setUser = useCallback((user: User) => {
+    setState({ status: "authenticated", user });
+  }, []);
+
   const value = useMemo(
     () => ({
       status: state.status,
@@ -108,8 +114,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       logoutAll,
       reloadUser,
+      setUser,
     }),
-    [state, login, loginWithGoogle, logout, logoutAll, reloadUser],
+    [state, login, loginWithGoogle, logout, logoutAll, reloadUser, setUser],
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;
